@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Table, Text, Loader, Pagination } from "@mantine/core";
+import { Table, Text, Loader, Pagination, Tooltip, Box } from "@mantine/core";
 import { useArchiveStore } from "../../api/archiveStore";
 import { getItems } from "../../api/archiveUtils";
 import { Timestamp } from "firebase/firestore";
@@ -77,8 +77,13 @@ const MainTable = () => {
       paginatedData.map((dt) => (
         <Table.Tr key={dt.id}>
           <Table.Td>{formatDataInfo(dt.date)}</Table.Td>
-          <Table.Td>{`${dt.vtValue} - ${dt.vtStatus}`}</Table.Td>
-          <Table.Td>{`${dt.pgmValue} - ${dt.pgmStatus}`}</Table.Td>
+          <Tooltip.Floating label={dt.infoVtStatus === "" ? dt.vtStatus.toLowerCase() : dt.infoVtStatus}>
+              <Table.Td>{`${dt.vtValue} - ${dt.vtStatus}`}</Table.Td>
+          </Tooltip.Floating>
+          <Tooltip.Floating label={dt.infoPgmStatus === "" ? dt.pgmStatus.toLowerCase() : dt.infoPgmStatus}>
+            <Table.Td>{`${dt.pgmValue} - ${dt.pgmStatus}`}</Table.Td>
+          </Tooltip.Floating>
+          
           <Table.Td
             style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
           >
