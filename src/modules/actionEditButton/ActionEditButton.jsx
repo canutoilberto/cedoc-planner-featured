@@ -18,10 +18,24 @@ const ActionEditButton = ({ itemId, initialData }) => {
   const [pgmValue, setPgmValue] = useState(initialData?.pgmValue || "");
   const [pgmStatus, setPgmStatus] = useState(initialData?.pgmStatus || "");
 
-  const [infoVtStatus, setinfoVtStatus] = useState(initialData?.infoVtStatus || "");
+  const [infoVtStatus, setInfoVtStatus] = useState(initialData?.infoVtStatus || "");
   const [infoPgmStatus, setInfoPgmStatus] = useState(initialData?.infoPgmStatus || "");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleVtStatusChange = (dt) => {
+    setVtStatus(dt)
+    if(dt != "OUTRO"){
+      setInfoVtStatus("")
+    }
+  };
+  
+  const handlePgmStatusChange = (dt) => {
+    setPgmStatus(dt)
+    if(dt != "OUTRO"){
+      setInfoPgmStatus("")
+    }
+  };
 
   const handleUpdate = async () => {
     setIsSubmitting(true);
@@ -84,7 +98,7 @@ const ActionEditButton = ({ itemId, initialData }) => {
                 placeholder="Status"
                 data={["OK", "NÃO CAPTURADO", "OUTRO"]}
                 value={vtStatus}
-                onChange={setVtStatus}
+                onChange={handleVtStatusChange}
                 clearable
               />
               {vtStatus == "OUTRO" && (
@@ -93,7 +107,7 @@ const ActionEditButton = ({ itemId, initialData }) => {
                     label="Descrição do Status"
                     placeholder="Descreva o status do VT"
                     value={infoVtStatus}
-                    onChange={(e) => setinfoVtStatus(e.target.value)}
+                    onChange={(e) => setInfoVtStatus(e.target.value)}
                   />
               )}
               <Select
@@ -111,7 +125,7 @@ const ActionEditButton = ({ itemId, initialData }) => {
                 placeholder="Status"
                 data={["OK", "NÃO CAPTURADO", "OUTRO"]}
                 value={pgmStatus}
-                onChange={setPgmStatus}
+                onChange={handlePgmStatusChange}
                 clearable
               />
               {pgmStatus == "OUTRO" && (
