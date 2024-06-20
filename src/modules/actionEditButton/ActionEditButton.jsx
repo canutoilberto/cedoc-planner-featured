@@ -1,4 +1,4 @@
-import { Button, Tooltip, Modal, Stack, Paper, Select } from "@mantine/core";
+import { Button, Tooltip, Modal, Stack, Paper, Select, TextInput } from "@mantine/core";
 import { RiEdit2Fill } from "react-icons/ri";
 import { useDisclosure } from "@mantine/hooks";
 import { DateInput } from "@mantine/dates";
@@ -17,20 +17,42 @@ const ActionEditButton = ({ itemId, initialData }) => {
   const [vtStatus, setVtStatus] = useState(initialData?.vtStatus || "");
   const [pgmValue, setPgmValue] = useState(initialData?.pgmValue || "");
   const [pgmStatus, setPgmStatus] = useState(initialData?.pgmStatus || "");
+
+  const [infoVtStatus, setInfoVtStatus] = useState(initialData?.infoVtStatus || "");
+  const [infoPgmStatus, setInfoPgmStatus] = useState(initialData?.infoPgmStatus || "");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleVtStatusChange = (dt) => {
+    setVtStatus(dt)
+    if(dt != "OUTRO"){
+      setInfoVtStatus("")
+    }
+  };
+  
+  const handlePgmStatusChange = (dt) => {
+    setPgmStatus(dt)
+    if(dt != "OUTRO"){
+      setInfoPgmStatus("")
+    }
+  };
 
   const handleUpdate = async () => {
     setIsSubmitting(true);
+
     const updatedItem = {
       date: value,
       vtValue,
       vtStatus,
+      infoVtStatus,
       pgmValue,
       pgmStatus,
+      infoPgmStatus
     };
 
     await updateItem(itemId, updatedItem);
     setIsSubmitting(false);
+    
     toast.success("Item editado com sucesso!");
     close();
   };
@@ -76,9 +98,18 @@ const ActionEditButton = ({ itemId, initialData }) => {
                 placeholder="Status"
                 data={["OK", "NÃO CAPTURADO", "OUTRO"]}
                 value={vtStatus}
-                onChange={setVtStatus}
+                onChange={handleVtStatusChange}
                 clearable
               />
+              {vtStatus == "OUTRO" && (
+                  <TextInput
+                    id="infoStatus"
+                    label="Descrição do Status"
+                    placeholder="Descreva o status do VT"
+                    value={infoVtStatus}
+                    onChange={(e) => setInfoVtStatus(e.target.value)}
+                  />
+              )}
               <Select
                 id="broadcast"
                 label="Programa"
@@ -94,9 +125,18 @@ const ActionEditButton = ({ itemId, initialData }) => {
                 placeholder="Status"
                 data={["OK", "NÃO CAPTURADO", "OUTRO"]}
                 value={pgmStatus}
-                onChange={setPgmStatus}
+                onChange={handlePgmStatusChange}
                 clearable
               />
+              {pgmStatus == "OUTRO" && (
+                  <TextInput
+                    id="infoStatus"
+                    label="Descrição do Programa"
+                    placeholder="Descreva o status do Programa"
+                    value={infoPgmStatus}
+                    onChange={(e) => setInfoPgmStatus(e.target.value)}
+                  />
+              )}
               <Button
                 variant="filled"
                 onClick={handleUpdate}

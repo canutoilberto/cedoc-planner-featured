@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { Modal, Button, Stack, Paper, Select, Tooltip } from "@mantine/core";
+import { Modal, Button, Stack, Paper, Select, Tooltip, TextInput } from "@mantine/core";
 import { AiFillFileAdd } from "react-icons/ai";
 import { DateInput } from "@mantine/dates";
 import { useArchiveStore } from "../../api/archiveStore";
@@ -13,6 +13,9 @@ const FormModalButton = () => {
   const [broadcast, setBroadcast] = useState("");
   const [broadcastStatus, setBroadcastStatus] = useState("");
   const [isSubmiting, setIsSubmiting] = useState(false);
+
+  const [infoVideotapeStatus, setInfoVideotapeStatus] = useState("");
+  const [infoBroadcastStatus, setInfoBroadcastStatus] = useState("");
 
   const [opened, { open, close }] = useDisclosure(false);
   const addItem = useArchiveStore((state) => state.addItem);
@@ -36,8 +39,10 @@ const FormModalButton = () => {
       date: dateValue,
       vtValue: videotape,
       vtStatus: videotapeStatus,
+      infoVtStatus: infoVideotapeStatus,
       pgmValue: broadcast,
       pgmStatus: broadcastStatus,
+      infoPgmStatus: infoBroadcastStatus,
     };
     await addItem(newItem);
     toast("Dados inseridos com sucesso!");
@@ -92,6 +97,14 @@ const FormModalButton = () => {
                   onChange={setVideotapeStatus}
                   clearable
                 />
+                {videotapeStatus == "OUTRO" && (
+                  <TextInput
+                    id="infoStatus"
+                    label="Descrição do Status"
+                    placeholder="Descreva o status do VT"
+                    onChange={(e) => setInfoVideotapeStatus(e.target.value)}
+                  />
+                )}
                 <Select
                   id="broadcast"
                   label="Programa"
@@ -110,6 +123,14 @@ const FormModalButton = () => {
                   onChange={setBroadcastStatus}
                   clearable
                 />
+                {broadcastStatus == "OUTRO" && (
+                  <TextInput
+                    id="infoStatus"
+                    label="Descrição do Programa"
+                    placeholder="Descreva o status do Programa"
+                    onChange={(e) => setInfoBroadcastStatus(e.target.value)}
+                  />
+                )}
 
                 <Button type="submit" variant="filled" disabled={isSubmiting}>
                   {isSubmiting ? "Enviando..." : "Enviar"}

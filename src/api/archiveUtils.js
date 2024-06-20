@@ -5,6 +5,7 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "../database/firebase";
 
@@ -43,5 +44,18 @@ export const updateItem = async (id, updateItem) => {
   } catch (error) {
     console.log(error.message);
     throw error;
+  }
+};
+
+export const formatDataInfo = (timestamp) => {
+  if (timestamp instanceof Timestamp) {
+    const date = timestamp.toDate();
+    const options = { day: "2-digit", month: "long", year: "numeric" };
+    return date.toLocaleDateString("pt-BR", options);
+  } else if (timestamp instanceof Date) {
+    const options = { day: "2-digit", month: "long", year: "numeric" };
+    return timestamp.toLocaleDateString("pt-BR", options);
+  } else {
+    return "";
   }
 };
