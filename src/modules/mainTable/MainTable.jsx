@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { Table, Text, Loader, Pagination, Tooltip, Box } from "@mantine/core";
+import { Table, Loader, Pagination, Tooltip, VisuallyHidden } from "@mantine/core";
 import { useArchiveStore } from "../../api/archiveStore";
-import { getItems } from "../../api/archiveUtils";
-import { Timestamp } from "firebase/firestore";
+import { formatDataInfo } from "../../api/archiveUtils";
 import { useEffect, useState, useCallback } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ActionDeleteButton from "../actionDeleteButton/ActionDeleteButton";
 import ActionEditButton from "../actionEditButton/ActionEditButton";
+import GenerateTablePDF from "../generateTablePDF/GenerateTablePDF";
 
 const MainTable = () => {
   const {
@@ -20,6 +20,7 @@ const MainTable = () => {
     setPage,
     fetchItemsForCurrentMonth,
   } = useArchiveStore();
+
   const [isLoading, setIsLoading] = useState(true);
 
   const getArchiveData = useCallback(async () => {
@@ -39,18 +40,6 @@ const MainTable = () => {
     fetchData();
   }, [listenData, getArchiveData]);
 
-  const formatDataInfo = (timestamp) => {
-    if (timestamp instanceof Timestamp) {
-      const date = timestamp.toDate();
-      const options = { day: "2-digit", month: "long", year: "numeric" };
-      return date.toLocaleDateString("pt-BR", options);
-    } else if (timestamp instanceof Date) {
-      const options = { day: "2-digit", month: "long", year: "numeric" };
-      return timestamp.toLocaleDateString("pt-BR", options);
-    } else {
-      return "";
-    }
-  };
 
   const filteredData = data.filter((item) => {
     const programMatch = filter ? item.pgmValue.includes(filter) : true;
@@ -65,6 +54,7 @@ const MainTable = () => {
     startIndex,
     startIndex + itemsPerPage
   );
+  
 
   const rows =
     paginatedData.length === 0 ? (
@@ -135,7 +125,11 @@ const MainTable = () => {
         withEdges
       />
       <ToastContainer theme="dark" type="success" autoClose={3000} />
+      <VisuallyHidden>
+        <GenerateTablePDF paginatedData={paginatedData} />
+      </VisuallyHidden>
     </>
+    
   );
 };
 
