@@ -17,17 +17,22 @@ export const useArchiveStore = create((set) => ({
   filter: "",
   setFilter: (program) => set({ filter: program }),
 
+  startDate: null,
+  endDate: null,
+  setStartDate: (date) => set({ startDate: date }),
+  setEndDate: (date) => set({ endDate: date }),
+
   currentPage: 1,
   itemsPerPage: 7,
   setPage: (page) => set({ currentPage: page }),
 
   addItem: async (item) => {
     try {
-      const createdAt = serverTimestamp(); // Obtém a hora atual do servidor
-      const newItem = { ...item, createdAt }; // Adiciona o campo createdAt ao item
-      const addedItem = await addItemToFirestore(newItem); // Adiciona o item ao Firestore
+      const createdAt = serverTimestamp();
+      const newItem = { ...item, createdAt };
+      const addedItem = await addItemToFirestore(newItem);
       set((state) => ({
-        data: [...state.data, addedItem], // Atualiza o estado com o novo item
+        data: [...state.data, addedItem],
       }));
     } catch (error) {
       console.log(error.message);
@@ -36,9 +41,9 @@ export const useArchiveStore = create((set) => ({
 
   deleteItem: async (id) => {
     try {
-      await deleteItemFromFirestore(id); // Chama a função deleteItem do archiveUtils.js
+      await deleteItemFromFirestore(id);
       set((state) => ({
-        data: state.data.filter((item) => item.id !== id), // Remove o item do estado local
+        data: state.data.filter((item) => item.id !== id),
       }));
     } catch (error) {
       console.log(error.message);
@@ -47,11 +52,11 @@ export const useArchiveStore = create((set) => ({
 
   updateItem: async (id, updatedItem) => {
     try {
-      await updateItemInFirestore(id, updatedItem); // Chama a função updateItem do archiveUtils.js
+      await updateItemInFirestore(id, updatedItem);
       set((state) => ({
         data: state.data.map((item) =>
           item.id === id ? { ...item, ...updatedItem } : item
-        ), // Atualiza o item no estado local
+        ),
       }));
     } catch (error) {
       console.log(error.message);
@@ -60,9 +65,9 @@ export const useArchiveStore = create((set) => ({
 
   fetchItems: async () => {
     try {
-      const value = await getItemsFromFirestore(); // Obtém os itens do Firestore
+      const value = await getItemsFromFirestore();
       const items = value.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      items.sort((a, b) => b.date.toMillis() - a.date.toMillis()); // Ordena os itens em ordem decrescente
+      items.sort((a, b) => b.date.toMillis() - a.date.toMillis());
       set({ data: items });
     } catch (error) {
       console.log(error.message);
@@ -71,7 +76,7 @@ export const useArchiveStore = create((set) => ({
 
   fetchItemsForCurrentMonth: async () => {
     try {
-      const value = await getItemsFromFirestore(); // Obtém os itens do Firestore
+      const value = await getItemsFromFirestore();
       const items = value.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth();
@@ -82,6 +87,21 @@ export const useArchiveStore = create((set) => ({
           itemDate.getMonth() === currentMonth &&
           itemDate.getFullYear() === currentYear
         );
+      });
+      filteredItems.sort((a, b) => b.date.toMillis() - a.date.toMillis());
+      set({ data: filteredItems });
+    } catch (error) {
+      console.log(error.message);
+    }
+  },
+
+  fetchItemsByPeriod: async (startDate, endDate) => {
+    try {
+      const value = await getItemsFromFirestore();
+      const items = value.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      const filteredItems = items.filter((item) => {
+        const itemDate = item.date.toDate();
+        return itemDate >= startDate && itemDate <= endDate;
       });
       filteredItems.sort((a, b) => b.date.toMillis() - a.date.toMillis());
       set({ data: filteredItems });
