@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DatePicker } from "@mantine/dates";
-import { Menu, Button, Group } from "@mantine/core";
+import { Menu, Button, Group, Tooltip } from "@mantine/core";
 import { RiCalendarFill } from "react-icons/ri";
 import { useArchiveStore } from "../../api/archiveStore";
 
@@ -43,16 +43,20 @@ const FilterByPeriod = () => {
       onChange={setMenuOpened}
     >
       <Menu.Target>
-        <Button
-          variant="default"
-          size="md"
-          onClick={() => setMenuOpened((o) => !o)}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            Filtrar por data
-            <RiCalendarFill size={20} />
-          </div>
-        </Button>
+        <Tooltip label="Filtrar por período">
+          <Button
+            variant="default"
+            size="md"
+            onClick={() => setMenuOpened((o) => !o)}
+          >
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              Filtrar por período
+              <RiCalendarFill size={20} />
+            </div>
+          </Button>
+        </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
         <div style={{ padding: "1rem" }}>

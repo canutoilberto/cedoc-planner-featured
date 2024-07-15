@@ -1,4 +1,4 @@
-import { Menu, Button } from "@mantine/core";
+import { Menu, Button, Tooltip } from "@mantine/core";
 import { RiFilterFill } from "react-icons/ri";
 import { useArchiveStore } from "../../api/archiveStore";
 
@@ -8,12 +8,16 @@ const FilterMenu = () => {
   return (
     <Menu shadow="md" width={220} offset={7}>
       <Menu.Target>
-        <Button variant="default" size="md">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            Filtrar por progama
-            <RiFilterFill size={20} />
-          </div>
-        </Button>
+        <Tooltip label="Filtrar por programa">
+          <Button variant="default" size="md">
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              Filtrar por progama
+              <RiFilterFill size={20} />
+            </div>
+          </Button>
+        </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Label style={{ textAlign: "center", paddingBottom: "0.5rem" }}>

@@ -1,4 +1,5 @@
-import { Menu, Button } from "@mantine/core";
+import { Menu, Button, Tooltip } from "@mantine/core";
+import { RiSortNumberAsc, RiSortNumberDesc } from "react-icons/ri";
 import { useArchiveStore } from "../../api/archiveStore";
 
 const SortedButton = () => {
@@ -13,9 +14,15 @@ const SortedButton = () => {
   return (
     <Menu shadow="md" offset={7}>
       <Menu.Target>
-        <Button variant="default" size="md" onClick={toggleSortOrder}>
-          Ordenar: {sortOrder === "asc" ? "desc" : "asc"}
-        </Button>
+        <Tooltip label="Ordenar">
+          <Button variant="default" size="md" onClick={toggleSortOrder}>
+            {sortOrder === "asc" ? (
+              <RiSortNumberDesc size={24} />
+            ) : (
+              <RiSortNumberAsc size={24} />
+            )}
+          </Button>
+        </Tooltip>
       </Menu.Target>
     </Menu>
   );
