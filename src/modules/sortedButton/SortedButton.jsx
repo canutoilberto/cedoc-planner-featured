@@ -14,7 +14,7 @@ const SortedButton = () => {
     <Menu shadow="md" offset={7}>
       <Menu.Target>
         <Button variant="default" size="md" onClick={toggleSortOrder}>
-          Ordenar: {sortOrder === "asc" ? "Desc" : "Asc"}
+          Ordenar: {sortOrder === "asc" ? "desc" : "asc"}
         </Button>
       </Menu.Target>
     </Menu>
