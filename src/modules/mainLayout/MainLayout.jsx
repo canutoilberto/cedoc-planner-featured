@@ -5,13 +5,11 @@ import ButtonsWrapper from "../buttonsWrapper/ButtonsWrapper";
 import MainTitle from "../mainTitle/MainTitle";
 
 const MainLayout = () => {
-  
-
   return (
     <>
-      <Container className={classes.container} h="100vh" w={820}>
+      <Container className={classes.container} h="100vh" w="maw">
         <header className={classes.header}>
-          <MainTitle/>
+          <MainTitle />
         </header>
         <ButtonsWrapper />
         <MainTable />
