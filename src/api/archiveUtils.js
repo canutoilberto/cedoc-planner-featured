@@ -54,7 +54,6 @@ export const updateItem = async (id, updateItem) => {
 
 export const fetchItemsByPeriod = async (startDate, endDate) => {
   try {
-    const firestore = getFirestore();
     const collectionRef = collection(db, "archiveControls");
     const q = query(
       collectionRef,

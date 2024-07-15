@@ -8,6 +8,7 @@ const FilterByPeriod = () => {
   const [value, setValue] = useState([null, null]);
   const { setStartDate, setEndDate, fetchItemsByPeriod, fetchItems } =
     useArchiveStore();
+  const [menuOpened, setMenuOpened] = useState(false);
 
   const applyPeriodFilter = () => {
     const [start, end] = value;
@@ -15,6 +16,7 @@ const FilterByPeriod = () => {
       setStartDate(start);
       setEndDate(end);
       fetchItemsByPeriod(start, end);
+      setMenuOpened(false); // Fechar o menu após aplicar o filtro
     }
   };
 
@@ -24,17 +26,28 @@ const FilterByPeriod = () => {
     }
   };
 
-  const clearFilter = () => {
+  const clearFilter = async () => {
     setValue([null, null]);
     setStartDate(null);
     setEndDate(null);
-    fetchItems();
+    await fetchItems(); // Chama fetchItems como uma função assíncrona
+    setMenuOpened(false); // Fechar o menu após limpar o filtro
   };
 
   return (
-    <Menu shadow="md" width={300} offset={7}>
+    <Menu
+      shadow="md"
+      width={300}
+      offset={7}
+      opened={menuOpened}
+      onChange={setMenuOpened}
+    >
       <Menu.Target>
-        <Button variant="default" size="md">
+        <Button
+          variant="default"
+          size="md"
+          onClick={() => setMenuOpened((o) => !o)}
+        >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             Filtrar por data
             <RiCalendarFill size={20} />
