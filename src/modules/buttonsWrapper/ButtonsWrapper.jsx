@@ -3,6 +3,7 @@ import ActionInfoButton from "../actionInfoButton/ActionInfoButton";
 import FilterByPeriod from "../filterByPeriod/FilterByPeriod";
 import FilterMenu from "../filterMenu/FilterMenu";
 import FormModalButton from "../formModalButton/FormModalButton";
+import SortedButton from "../sortedButton/SortedButton";
 import classes from "./buttonsWrapper.module.css";
 
 const ButtonsWrapper = () => {
@@ -12,6 +13,7 @@ const ButtonsWrapper = () => {
         <FilterMenu />
         {/*<FilterByDate />*/}
         <FilterByPeriod />
+        <SortedButton />
       </div>
       <div style={{ display: "flex", gap: "0.5rem" }}>
         <FormModalButton />

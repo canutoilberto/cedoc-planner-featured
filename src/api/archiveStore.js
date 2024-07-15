@@ -27,6 +27,9 @@ export const useArchiveStore = create((set) => ({
   itemsPerPage: 7,
   setPage: (page) => set({ currentPage: page }),
 
+  sortOrder: "desc", // Adicionado estado de ordenação
+  setSortOrder: (order) => set({ sortOrder: order }),
+
   addItem: async (item) => {
     try {
       const createdAt = serverTimestamp(); // Obtém a hora atual do servidor
@@ -68,8 +71,14 @@ export const useArchiveStore = create((set) => ({
     try {
       const value = await getItemsFromFirestore(); // Obtém os itens do Firestore
       const items = value.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      items.sort((a, b) => b.date.toMillis() - a.date.toMillis()); // Ordena os itens em ordem decrescente
-      set({ data: items });
+      set((state) => {
+        const sortedItems = [...items].sort((a, b) => {
+          return state.sortOrder === "asc"
+            ? a.date.toMillis() - b.date.toMillis()
+            : b.date.toMillis() - a.date.toMillis();
+        });
+        return { data: sortedItems };
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -89,8 +98,14 @@ export const useArchiveStore = create((set) => ({
           itemDate.getFullYear() === currentYear
         );
       });
-      filteredItems.sort((a, b) => b.date.toMillis() - a.date.toMillis());
-      set({ data: filteredItems });
+      set((state) => {
+        const sortedItems = [...filteredItems].sort((a, b) => {
+          return state.sortOrder === "asc"
+            ? a.date.toMillis() - b.date.toMillis()
+            : b.date.toMillis() - a.date.toMillis();
+        });
+        return { data: sortedItems };
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -99,8 +114,14 @@ export const useArchiveStore = create((set) => ({
   fetchItemsByPeriod: async (startDate, endDate) => {
     try {
       const items = await fetchItemsByPeriodFromFirestore(startDate, endDate); // Usa a função de archiveUtils
-      items.sort((a, b) => b.date.toMillis() - a.date.toMillis());
-      set({ data: items });
+      set((state) => {
+        const sortedItems = [...items].sort((a, b) => {
+          return state.sortOrder === "asc"
+            ? a.date.toMillis() - b.date.toMillis()
+            : b.date.toMillis() - a.date.toMillis();
+        });
+        return { data: sortedItems };
+      });
     } catch (error) {
       console.log(error.message);
     }
